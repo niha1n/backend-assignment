@@ -142,7 +142,7 @@ router.get('/delete/:id',(req,res)=>{
 console.log('Credentials obtained, sending message...'); 
 let transporter = {
     host:'smtp.gmail.com',
-    port:465,
+    port: process.env.PORT,
     secure:true,
 
     auth: {
