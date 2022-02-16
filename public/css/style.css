@@ -1,0 +1,26 @@
+table, th, td {
+    border: 1px solid;
+  }
+
+body{
+    background:black;
+}
+.form-group label {
+  padding: 20px;
+  padding-left: 0px;
+}
+input{
+    border:none;
+    border-radius: 5px;
+}
+.list{
+    padding:20px 0px;
+}
+
+th, td {
+  padding-top: 10px;
+  padding-bottom: 20px;
+  padding-left: 30px;
+  padding-right: 40px;
+  text-align:center;
+}

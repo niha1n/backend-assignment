@@ -1,0 +1,16 @@
+<h3>Update invoice status</h3>
+
+
+<form action="/invoice/update" method="post">
+    <input type='hidden' name='_id' value="{{invoice._id}}">
+
+    <div class="form-group">
+        <label>Status</label>
+        <input required type="text" name="status" placeholder=" " value="{{invoice.status}}"> 
+    </div>
+   
+    <button type="submit"  href="/invoice/list" class="btn btn-success">Submit</button>
+</form>
+
+
+<a class="btn btn-primary" href="/invoice/list">GO BACK</a>
