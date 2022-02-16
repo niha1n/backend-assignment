@@ -21,7 +21,7 @@ app.use(express.static(__dirname + '/public'));
 app.set('view engine','hbs')
 
 //server
-app.listen(3000,()=>{
+app.listen(process.env.PORT,()=>{
 console.log("Success")
 })
 
