@@ -158,7 +158,7 @@ router.get('/sendmail/:id',(req,res)=>{
         if(!err){
 
             let message = {
-                from: 'test@example.com',
+                from: 'nihalkidu@gmail.com',
                 to: `${docs.mail}`,
                 subject: 'Nodemailer is unicode friendly ✔',
                 text: 'Hello to myself!',
