@@ -2,7 +2,8 @@ const express=require('express');
 const router=express.Router();
 const mongoose=require('mongoose');
 const Invoice=mongoose.model('Invoice')
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail')
+require('dotenv').config()
 
 router.get('/',(req,res)=>{
     res.render('./invoice/addOrEdit')
@@ -101,13 +102,11 @@ function insertData(req,res){
             console.log("Error during insertion")
         }
     })
-//sending due mail
     invoice.due = new Date(invoice.date);
     invoice.due.setDate(invoice.due.getDate() + 5);
 
     pay = (invoice.due - invoice.date)*0.000000011574 
 
-    
 }
 
 
@@ -139,60 +138,51 @@ router.get('/delete/:id',(req,res)=>{
     })
 })
 
-console.log('Credentials obtained, sending message...'); 
-let transporter = {
-    host:'smtp.gmail.com',
-    port: process.env.PORT,
-    secure:true,
-
-    auth: {
-        user: 'nihalkidu@gmail.com',
-        pass: '80salesman'
-    }
-};
 
 //sending invoice as mail
 
 router.get('/sendmail/:id',(req,res)=>{
     Invoice.findById(req.params.id, (err,docs)=>{
         if(!err){
-
-            let message = {
-                from: 'nihalkidu@gmail.com',
-                to: `${docs.mail}`,
-                subject: 'Nodemailer is unicode friendly ✔',
-                text: 'Hello to myself!',
-                html: `<table style="border:1px solid black">
-                <thead>
-                    <tr>
-                        <th>Working Hours</th>
-                        <th>Work Expenses</th>
-                        <th>Materials</th>
-                        <th>Labor</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>${docs.wrkHrs}</td>            
-                        <td>${docs.wrkExp}</td>
-                        <td>${docs.mat}</td>
-                        <td>${docs.lab}</td>
-                        <td>${docs.total}</td>
-                        <td><a><b>${docs.status}</b></a></td>
-                        </tr>
-                </tbody>
-                     </table>`};
-            
-            nodemailer.createTransport(transporter).sendMail(message, (err, info) => {
-                if (err) {
-                    console.log('Error occurred. ' + err.message);
-                    return process.exit(1);
-                }
-            
-                console.log('Message sent: %s', info.messageId);
-            });
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+            const msg = {
+              to: `${docs.mail}`, // Change to your recipient
+              from: 'nihalnrasiya@gmail.com', // Change to your verified sender
+              subject: 'Invoice',
+              text: 'Invoice Due',
+              html: `<table style="border:1px solid black">
+              <thead>
+                  <tr>
+                      <th>Working Hours</th>
+                      <th>Work Expenses</th>
+                      <th>Materials</th>
+                      <th>Labor</th>
+                      <th>Total</th>
+                      <th>Status</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>${docs.wrkHrs}</td>            
+                      <td>${docs.wrkExp}</td>
+                      <td>${docs.mat}</td>
+                      <td>${docs.lab}</td>
+                      <td>${docs.total}</td>
+                      <td><a><b>${docs.status}</b></a></td>
+                      </tr>
+              </tbody>
+                   </table> <br>
+                   Invoice is due ${docs.due}`,
+            }
+            sgMail
+              .send(msg)
+              .then(() => {
+                console.log('Email sent')
+              })
+              .catch((error) => {
+                console.error(error)
+              })
+        
             
         }
         else{
