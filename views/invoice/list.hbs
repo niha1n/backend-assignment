@@ -13,8 +13,10 @@
             <th>Materials</th>
             <th>Labor</th>
             <th>Total</th>
-            <th>Status</th>
+            <th>Status</th>           
             <th colspan = '3'>Actions</th>
+            <th>Payment Note</th>   
+            
         </tr>
     </thead>
     <tbody>
@@ -25,13 +27,14 @@
             <td>{{this.mat}}</td>
             <td>{{this.lab}}</td>
             <td>{{this.total}}</td>
-            <td><a><b>{{this.status}}</b></a></td>
+            <td><b>{{this.status}}</b></td>
             <td> <a href="/invoice/{{this._id}}" style='background:black; padding:5px; border-radius: 3px ; color:white; text-decoration: none;'> Edit Status</a></td>
             <td>
                 <a style='background:black; padding:5px; border-radius: 3px ; color:white; text-decoration: none;' href="/invoice/delete/{{this._id}}">Delete</a>
             </td>
             <td> <a href="/invoice/sendmail/{{this._id}}" style='background:black; padding:5px; border-radius: 3px ; color:white; text-decoration: none;'> Send Email</a></td>
-            <td>bill is due {{pay}}</td>
+            <td>{{this.nt}}</td>
+            <td>Bill is due {{this.dueDays}} day(s)</td>
         </tr>
         {{/each}}
     </tbody>

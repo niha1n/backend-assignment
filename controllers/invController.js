@@ -24,6 +24,9 @@ router.get('/list',(req,res)=>{
 })
 
 
+
+
+
 //insertion
 router.post('/',(req,res)=>{
         insertData(req,res)       
@@ -33,6 +36,9 @@ router.post('/',(req,res)=>{
 router.post('/update',(req,res)=>{
     updateData(req,res) 
 })
+
+
+
 
 
 
@@ -49,6 +55,9 @@ function updateData(req,res){
     )}
 
 
+
+
+
 function insertData(req,res){
 
     var invoice=new Invoice();
@@ -57,7 +66,8 @@ function insertData(req,res){
     invoice.wrkExp=req.body.workExp;
     invoice.mat=req.body.materials;
     invoice.lab=req.body.labour;
-    invoice.status = "Unpaid";
+    invoice.nt=req.body.note;
+    invoice.status ="Unpaid";
     invoice.date=Date.now();
 
     var sum=0;
@@ -91,23 +101,25 @@ function insertData(req,res){
             sum += 2000;
             break;
     }
-
     invoice.total=sum;
-
     invoice.save((err,doc)=>{
         if(!err){
             res.redirect('/invoice')
         }
         else{
             console.log("Error during insertion")
-        }
-    })
+        }})
+
+
     invoice.due = new Date(invoice.date);
     invoice.due.setDate(invoice.due.getDate() + 5);
 
-    pay = (invoice.due - invoice.date)*0.000000011574 
-
+    payWithin = Math.ceil((invoice.due - invoice.date)*0.000000011574)
+    invoice.dueDays=payWithin
+    
 }
+
+
 
 
 
@@ -128,7 +140,6 @@ router.get('/:id',(req,res)=>{
 router.get('/delete/:id',(req,res)=>{
     Invoice.findByIdAndDelete(req.params.id,(err,doc)=>{
         if(!err){
-            console.log(req.body)
             res.redirect('/invoice/list')
             
         }

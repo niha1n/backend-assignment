@@ -29,10 +29,13 @@ const invoiceSchema=new mongoose.Schema({
     },
     due:{
         type:Date
+    },
+    dueDays:{
+        type:Number
+    },
+    nt:{
+        type:String
     }
-
-
-
 })
 
 
